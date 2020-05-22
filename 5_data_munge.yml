@@ -1,0 +1,76 @@
+target_default: 5_data_munge
+
+packages:
+  - scipiper
+  - dplyr
+  
+sources:
+  - 5_data_munge/src/munge_data_files.R
+  
+targets:
+  5_data_munge:
+    depends:
+      - 5_data_munge/out/wqp_daily_depths.rds.ind
+      - 5_data_munge/out/wqp_daily_nodepths.rds.ind
+    
+# -- For WQP and NWISuv, first do a coarse QA, then reduce to daily  -- #
+# -- For NWISdv, do the coarse QA  -- #
+
+  min_value:
+    command: I(0)
+    
+  max_value:
+    command: I(35)
+    
+  max_daily_range:
+    command: I(30)
+    
+  # first, wqp data # 
+  5_data_munge/out/wqp_daily_depths.rds.ind:
+    command: munge_wqp_withdepths(
+      in_ind = '1_wqp_pull/out/wqp_data.rds.ind',
+      min_value, max_value, max_daily_range, 
+      out_ind = target_name)
+   
+  5_data_munge/out/wqp_daily_depths.rds:
+    command: gd_get('5_data_munge/out/wqp_daily_depths.rds.ind')
+    
+  5_data_munge/out/wqp_daily_nodepths.rds.ind:
+    command: munge_wqp_withoutdepths(
+      in_ind = '1_wqp_pull/out/wqp_data.rds.ind',
+      min_value, max_value, max_daily_range, 
+      out_ind = target_name)
+   
+  5_data_munge/out/wqp_daily_nodepths.rds:
+    command: gd_get('5_data_munge/out/wqp_daily_nodepths.rds.ind')
+    
+  # NWIS uv data #
+  5_data_munge/out/nwis_uv_daily.rds.ind:
+    command: munge_nwis_uv(
+      in_ind = '2_nwis_pull/out/nwis_uv_data.rds.ind',
+      min_value, max_value, max_daily_range, 
+      out_ind = target_name)
+   
+  5_data_munge/out/nwis_uv_daily.rds:
+    command: gd_get('5_data_munge/out/nwis_uv_daily.rds.ind')
+    
+  # NWIS dv data #
+  5_data_munge/out/nwis_dv_daily.rds.ind:
+    command: munge_nwis_dv(
+      in_ind = '2_nwis_pull/out/nwis_dv_data.rds.ind',
+      min_value, max_value, max_daily_range, 
+      out_ind = target_name)
+   
+  5_data_munge/out/nwis_dv_daily.rds:
+    command: gd_get('5_data_munge/out/nwis_dv_daily.rds.ind')
+    
+  # bring it all together
+  5_data_munge/out/daily_temperatures.rds.ind:
+    command: combine_all_dat(
+      nwis_dv_ind  = '5_data_munge/out/nwis_dv_daily.rds.ind',
+      nwis_uv_ind = '5_data_munge/out/nwis_uv_daily.rds.ind',
+      wqp_ind = '5_data_munge/out/wqp_daily_nodepths.rds.ind',
+      out_ind = target_name)
+      
+  5_data_munge/out/daily_temperatures.rds:
+    command: gd_get('5_data_munge/out/daily_temperatures.rds.ind')

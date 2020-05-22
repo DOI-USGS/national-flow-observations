@@ -1,0 +1,11 @@
+# https://www.waterqualitydata.us/Codes/Characteristicname?mimeType=xml
+
+parameterCd:
+  - "00010"
+  
+startDate:
+  - "1900-01-01"
+  
+endDate:
+  - "2019-08-23"
+  
