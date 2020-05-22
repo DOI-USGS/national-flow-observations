@@ -1,6 +1,6 @@
 partition_inventory <- function(inventory_ind, nwis_pull_size, partitions_ind) {
   
-  inventory <- feather::read_feather(scipiper::sc_retrieve(inventory_ind,remake_file = '2_nwis_pull.yml'))
+  inventory <- feather::read_feather(scipiper::sc_retrieve(inventory_ind,remake_file = '10_nwis_pull.yml'))
   
   # uv data count number is the number of days between the min and max observation days
   # assume that each day has 15 minute data, which is 96 obs/day

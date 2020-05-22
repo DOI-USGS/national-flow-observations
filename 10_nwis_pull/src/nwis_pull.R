@@ -5,9 +5,9 @@
 plan_nwis_pull <- function(partitions_ind, service) {
 
   folders <- list(
-    tmp='2_nwis_pull/tmp',
-    out='2_nwis_pull/out',
-    log='2_nwis_pull/log')
+    tmp='10_nwis_pull/tmp',
+    out='10_nwis_pull/out',
+    log='10_nwis_pull/log')
   
   partitions <- feather::read_feather(scipiper::sc_retrieve(partitions_ind))
 
@@ -62,8 +62,8 @@ create_nwis_pull_makefile <- function(makefile, task_plan, final_targets) {
 
   create_task_makefile(
     makefile=makefile, task_plan=task_plan,
-    include = c('2_nwis_pull.yml'),
-    sources = '2_nwis_pull/src/nwis_pull.R',
+    include = c('10_nwis_pull.yml'),
+    sources = '10_nwis_pull/src/nwis_pull.R',
     packages=c('dplyr', 'dataRetrieval', 'feather', 'scipiper', 'yaml', 'stringr'),
     file_extensions=c('ind','feather'), finalize_funs = 'combine_nwis_data', final_targets = final_targets)
 }
