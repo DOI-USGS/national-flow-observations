@@ -5,7 +5,6 @@ combine_nwis_data <- function(ind_file, ...){
   rds_files <- c(...)
   df_list <- list()
   
-  
   for (i in seq_len(length(rds_files))){
     
     temp_dat <- readRDS(rds_files[i]) 
@@ -20,7 +19,7 @@ combine_nwis_data <- function(ind_file, ...){
   
   data_file <- scipiper::as_data_file(ind_file)
   saveRDS(nwis_df, data_file)
-  gd_put(ind_file, data_file)
+  #gd_put(ind_file, data_file)
 }
 
 
@@ -44,15 +43,17 @@ choose_flow_column <- function(temp_dat) {
   
   # find which col_name has the most records for each site,
   # and keep that column
-  top_cols <- all_dat %>%
-    group_by(site_no, col_name) %>%
-    summarize(count_nu = n()) %>%
-    group_by(site_no) %>%
-    slice(which.max(count_nu))
-  
+  # top_cols <- all_dat %>%
+  #   group_by(site_no, col_name) %>%
+  #   summarize(count_nu = n()) %>%
+  #   group_by(site_no) %>%
+  #   slice(which.max(count_nu))
+  # 
   # reduce the data down to those site-top col combos
-  reduced_dat <- inner_join(all_dat, select(top_cols, site_no, col_name)) %>%
-    distinct()
+  # reduced_dat <- inner_join(all_dat, select(top_cols, site_no, col_name)) %>%
+  #   distinct()
+  # 
+  # return(reduced_dat)
   
-  return(reduced_dat)
+  return(all_dat)
 }
