@@ -1,0 +1,9 @@
+target_default: everything
+
+include:
+  - 10_nwis_pull.yml
+
+targets:
+  everything:
+    depends:
+      - 10_nwis_pull
