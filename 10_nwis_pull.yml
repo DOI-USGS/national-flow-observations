@@ -21,6 +21,7 @@ targets:
       
 # -- get a CONUS inventory of available data for download -- #
 
+  # modify end date to extend data pull
   nwis_pull_parameters:
     command: yaml.load_file('10_nwis_pull/cfg/nwis_pull_params.yml')
     

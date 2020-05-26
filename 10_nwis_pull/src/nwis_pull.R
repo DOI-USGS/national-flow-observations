@@ -61,34 +61,9 @@ create_nwis_pull_makefile <- function(makefile, task_plan, final_targets) {
   create_task_makefile(
     makefile=makefile, task_plan=task_plan,
     include = c('10_nwis_pull.yml'),
-    sources = '10_nwis_pull/src/nwis_pull.R',
+    sources = c('10_nwis_pull/src/nwis_pull.R', '10_nwis_pull/src/nwis_combine_functions.R'),
     packages=c('dplyr', 'dataRetrieval', 'feather', 'scipiper', 'yaml', 'stringr'),
     file_extensions=c('ind','feather'), finalize_funs = 'combine_nwis_data', final_targets = final_targets)
-}
-
-# extract and post the data (dropping the site info attribute), creating an
-# .ind file that we will want to share because it represents the shared cache
-combine_nwis_data <- function(ind_file, ...){
-
-  rds_files <- c(...)
-  df_list <- list()
-
-
-  for (i in seq_len(length(rds_files))){
-  
-    temp_dat <- readRDS(rds_files[i]) 
-    
-    reduced_dat <- choose_temp_column(temp_dat)
-    
-    df_list[[i]] <- reduced_dat
-  }
-  
-  nwis_df <- do.call("bind_rows", df_list)
-  
-
-  data_file <- scipiper::as_data_file(ind_file)
-  saveRDS(nwis_df, data_file)
-  gd_put(ind_file, data_file)
 }
 
 # --- functions used in task table ---
@@ -104,10 +79,10 @@ filter_partitions <- function(partitions, pull_task) {
 
 # pull a batch of NWIS observations, save locally, return .tind file
 get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbose = TRUE) {
-
+  
   nwis_pull_params$service <- service
   nwis_pull_params$site <- partition$site_no
-
+  
   if (service == 'dv') { nwis_pull_params$statCd <- '00003' }
   
   # do the data pull
@@ -125,42 +100,9 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
   # make nwis_dat a tibble, converting either from data.frame (the usual case) or
   # NULL (if there are no results)
   nwis_dat <- as_tibble(nwis_dat)
-
+  
   # write the data to rds file. do this even if there were 0
   # results because remake expects this function to always create the target
   # file
   saveRDS(nwis_dat, data_file)
 }
-
-choose_temp_column <- function(temp_dat) {
-  # take all temperature columns and put into long df
-  values <- temp_dat %>%
-    select(-ends_with('_cd'), -agency_cd) %>%
-    tidyr::gather(key = 'col_name', value = 'temp_value', -site_no, -dateTime) %>%
-    filter(!is.na(temp_value))
-  
-  # take all temperature cd columns and do the same thing
-  codes <- temp_dat %>%
-    select(site_no, dateTime, ends_with('_cd'), -tz_cd, -agency_cd) %>%
-    tidyr::gather(key = 'col_name', value = 'cd_value', -site_no, -dateTime) %>%
-    mutate(col_name = gsub('_cd', '', col_name)) %>%
-    filter(!is.na(cd_value))
-  
-  # bring together so I have a long df with both temp and cd values
-  all_dat <- left_join(values, codes, by = c('site_no', 'dateTime', 'col_name'))
-  
-  # find which col_name has the most records for each site,
-  # and keep that column
-  top_cols <- all_dat %>%
-    group_by(site_no, col_name) %>%
-    summarize(count_nu = n()) %>%
-    group_by(site_no) %>%
-    slice(which.max(count_nu))
-  
-  # reduce the data down to those site-top col combos
-  reduced_dat <- inner_join(all_dat, select(top_cols, site_no, col_name)) %>%
-    distinct()
-  
-  return(reduced_dat)
-}
-
