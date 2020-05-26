@@ -1,12 +1,14 @@
-partition_inventory <- function(inventory_ind, nwis_pull_size, partitions_ind) {
-  
-  inventory <- feather::read_feather(scipiper::sc_retrieve(inventory_ind,remake_file = '10_nwis_pull.yml'))
+partition_inventory <- function(inventory, nwis_pull_size) {
   
   # uv data count number is the number of days between the min and max observation days
   # assume that each day has 15 minute data, which is 96 obs/day
   # multiple record count by 96 to estimate record count for parsing
-  if (grepl('nwis_uv', inventory_ind)) {
+  inventory_name <- deparse(substitute(inventory))
+  
+  if (grepl('nwis_uv', inventory_name)) {
     inventory$count_nu <- inventory$count_nu*96
+  } else {
+    inventory <- readRDS(inventory)
   }
   
   # first, get rid of duplicate sites from whatNWISdata call
@@ -47,15 +49,13 @@ partition_inventory <- function(inventory_ind, nwis_pull_size, partitions_ind) {
   # of the filename)
   pull_time <- Sys.time()
   attr(pull_time, 'tzone') <- 'UTC'
-  pull_id <- format(pull_time, '%y%m%d%H%M%S')
+  pull_id <- format(pull_time, '%y%m%d')
 
   partitions <- atomic_groups %>%
-    mutate(PullDate = pull_time,
+    mutate(PullDate = format(pull_time, '%Y-%m-%d'),
            PullTask = sprintf('%s_%03d', pull_id, assignments)) %>%
     select(site_no, count_nu, PullTask, PullDate)
   
-  feather::write_feather(partitions, as_data_file(partitions_ind))
-  gd_put(partitions_ind)
-  
+  return(partitions)
   
 }

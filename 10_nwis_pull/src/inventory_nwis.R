@@ -1,4 +1,4 @@
-inventory_nwis <- function(inv_ind, nwis_pull_params, service) {
+inventory_nwis <- function(inv_file, nwis_pull_params, service) {
   
   hucs <- stringr::str_pad(1:21, width = 2, pad = "0")
   nwis_pull_params$service <- service
@@ -16,8 +16,8 @@ inventory_nwis <- function(inv_ind, nwis_pull_params, service) {
     all_dat <- rbind(all_dat, sites)
     
   }
-  data_file <- scipiper::as_data_file(inv_ind)
-  feather::write_feather(all_dat, data_file)
-  gd_put(inv_ind)
+  #data_file <- scipiper::as_data_file(inv_ind)
+  saveRDS(all_dat, inv_file)
+  #gd_put(inv_ind)
   
 }

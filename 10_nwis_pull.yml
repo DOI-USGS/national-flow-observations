@@ -4,14 +4,11 @@ packages:
   - dataRetrieval
   - yaml
   - maps
-  - ggplot2
-  - ggthemes
   - scipiper
   - dplyr
   
 sources:
   - 10_nwis_pull/src/inventory_nwis.R
-  - lib/src/require_local.R
   - 10_nwis_pull/src/nwis_pull.R
   - 10_nwis_pull/src/compare_nwis_services.R
   - 10_nwis_pull/src/nwis_partition.R
@@ -33,61 +30,38 @@ targets:
   # -- get inventory of observations available to download -- #
 
   # dv data
-  # force rebuilt of the inventories if you want to start over
-  10_nwis_pull/inout/nwis_dv_inventory.feather.ind:
-    command: inventory_nwis(inv_ind = target_name,
+  # force rebuild of the inventories if you want to start over
+  10_nwis_pull/inout/nwis_dv_inventory.rds:
+    command: inventory_nwis(inv_file = target_name,
       nwis_pull_params = nwis_pull_parameters, 
       service = I('dv'))
-      
-  10_nwis_pull/inout/nwis_dv_inventory.feather:
-    command: gd_get('10_nwis_pull/inout/nwis_dv_inventory.feather.ind')
   
   # uv data 
-  10_nwis_pull/inout/nwis_uv_inventory.feather.ind:
-    command: inventory_nwis(inv_ind = target_name,
+  10_nwis_pull/inout/nwis_uv_inventory.rds:
+    command: inventory_nwis(inv_file = target_name,
       nwis_pull_params = nwis_pull_parameters, 
       service = I('uv'))
-      
-  10_nwis_pull/inout/nwis_uv_inventory.feather:
-    command: gd_get('10_nwis_pull/inout/nwis_uv_inventory.feather.ind')
     
   # create a table that compares services
-  10_nwis_pull/inout/nwis_compare_services.feather.ind:
-    command: compare_services(dv_ind = '10_nwis_pull/inout/nwis_dv_inventory.feather.ind', 
-      uv_ind = '10_nwis_pull/inout/nwis_uv_inventory.feather.ind', compare_ind = target_name)
-    
-  10_nwis_pull/inout/nwis_compare_services.feather:
-    command: gd_get('10_nwis_pull/inout/nwis_compare_services.feather.ind')
+  nwis_compare_services:
+    command: compare_services(
+      dv = '10_nwis_pull/inout/nwis_dv_inventory.rds', 
+      uv = '10_nwis_pull/inout/nwis_uv_inventory.rds')
     
   # filter the UV inventory to only those sites that are not in DV
   # this isn't perfect - as some sites overlap but don't have the same data.
   
-  10_nwis_pull/inout/nwis_uv_inventory_reduced.feather.ind:
-    command: reduce_redundancy(uv_inv_ind = '10_nwis_pull/inout/nwis_uv_inventory.feather.ind', 
-      compare_ind = '10_nwis_pull/inout/nwis_compare_services.feather.ind',
-      out_ind = target_name)
-    
-  10_nwis_pull/inout/nwis_uv_inventory_reduced.feather:
-    command: gd_get('10_nwis_pull/inout/nwis_uv_inventory_reduced.feather.ind')
+  nwis_uv_inventory_reduced:
+    command: reduce_redundancy(compare = nwis_compare_services)
 
   # -- partition data -- #
   # dv
-  10_nwis_pull/inout/nwis_dv_partition.feather.ind:
-    command: partition_inventory(inventory_ind = '10_nwis_pull/inout/nwis_dv_inventory.feather.ind', 
-      nwis_pull_size, 
-      partitions_ind = target_name) 
- 
-  10_nwis_pull/inout/nwis_dv_partition.feather:
-    command: gd_get('10_nwis_pull/inout/nwis_dv_partition.feather.ind')
+  nwis_dv_partition:
+    command: partition_inventory(inventory = '10_nwis_pull/inout/nwis_dv_inventory.rds', nwis_pull_size) 
     
   #uv
-  10_nwis_pull/inout/nwis_uv_partition.feather.ind:
-    command: partition_inventory(inventory_ind = '10_nwis_pull/inout/nwis_uv_inventory_reduced.feather.ind', 
-      nwis_pull_size, 
-      partitions_ind = target_name) 
- 
-  10_nwis_pull/inout/nwis_uv_partition.feather:
-    command: gd_get('10_nwis_pull/inout/nwis_uv_partition.feather.ind')
+  nwis_uv_partition:
+    command: partition_inventory(inventory = nwis_uv_inventory_reduced, nwis_pull_size) 
     
   # -- create and execute tasks from pull table -- #
 
@@ -96,8 +70,7 @@ targets:
   
   #dv
   nwis_dv_pull_plan:
-    command: plan_nwis_pull(partitions_ind='10_nwis_pull/inout/nwis_dv_partition.feather.ind',
-      service = I('dv'))
+    command: plan_nwis_pull(partitions = nwis_dv_partition, service = I('dv'))
 
   10_nwis_dv_pull_tasks.yml:
     command: create_nwis_pull_makefile(makefile=target_name, task_plan=nwis_dv_pull_plan,
@@ -114,8 +87,7 @@ targets:
       
   #uv
   nwis_uv_pull_plan:
-    command: plan_nwis_pull(partitions_ind='10_nwis_pull/inout/nwis_uv_partition.feather.ind',
-      service = I('uv'))
+    command: plan_nwis_pull(partitions = nwis_uv_partition, service = I('uv'))
 
   10_nwis_uv_pull_tasks.yml:
     command: create_nwis_pull_makefile(makefile=target_name, task_plan=nwis_uv_pull_plan,

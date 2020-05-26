@@ -2,26 +2,24 @@
 
 # prepare a plan for downloading (from NWIS) and posting (to GD) one data file
 # per state
-plan_nwis_pull <- function(partitions_ind, service) {
+plan_nwis_pull <- function(partitions, service) {
 
   folders <- list(
     tmp='10_nwis_pull/tmp',
     out='10_nwis_pull/out',
     log='10_nwis_pull/log')
   
-  partitions <- feather::read_feather(scipiper::sc_retrieve(partitions_ind))
-
   # after all wanted data have been pulled, this function will be called but
   # doesn't need to create anything much, so just return NULL
   # isolate the partition info for just one task
-  
+  partitions_name <- deparse(substitute(partitions))
   partition <- scipiper::create_task_step(
     step_name = 'partition',
     target_name = function(task_name, step_name, ...) {
       sprintf('%s_partition_%s', service, task_name)
     },
     command = function(task_name, ...) {
-      sprintf("filter_partitions(partitions_ind='%s', I('%s'))", partitions_ind, task_name)
+      sprintf("filter_partitions(partitions = %s, I('%s'))", partitions_name, task_name)
     }
   )
 
@@ -45,8 +43,6 @@ plan_nwis_pull <- function(partitions_ind, service) {
     }
   )
 
-
-
   # put the steps together into a task plan
   task_plan <- scipiper::create_task_plan(
     task_names=sort(partitions$PullTask),
@@ -54,6 +50,8 @@ plan_nwis_pull <- function(partitions_ind, service) {
     final_steps=c('download'),
     add_complete=FALSE,
     ind_dir=folders$tmp)
+  
+  return(task_plan)
 
 }
 
@@ -97,10 +95,8 @@ combine_nwis_data <- function(ind_file, ...){
 
 # read the partitions file and pull out just those sites that go with a single
 # PullTask 
-filter_partitions <- function(partitions_ind, pull_task) {
+filter_partitions <- function(partitions, pull_task) {
   
-  partitions <- feather::read_feather(sc_retrieve(partitions_ind))
-
   these_partitions <- dplyr::filter(partitions, PullTask==pull_task, count_nu > 0)
   
   return(these_partitions)  
@@ -128,7 +124,7 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
   }
   # make nwis_dat a tibble, converting either from data.frame (the usual case) or
   # NULL (if there are no results)
-  nwis_dat <- as_data_frame(nwis_dat)
+  nwis_dat <- as_tibble(nwis_dat)
 
   # write the data to rds file. do this even if there were 0
   # results because remake expects this function to always create the target
