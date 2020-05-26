@@ -19,7 +19,7 @@ combine_nwis_data <- function(ind_file, ...){
   
   data_file <- scipiper::as_data_file(ind_file)
   saveRDS(nwis_df, data_file)
-  #gd_put(ind_file, data_file)
+  gd_put(ind_file, data_file)
 }
 
 
