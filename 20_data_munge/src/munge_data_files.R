@@ -22,7 +22,7 @@ combine_all_dat <- function(nwis_dv_ind, nwis_uv_ind, out_ind) {
   # save
   data_file <- scipiper::as_data_file(out_ind)
   saveRDS(all_dat, data_file)
-  gd_put(out_ind)
+  s3_put(out_ind)
   
 }
   

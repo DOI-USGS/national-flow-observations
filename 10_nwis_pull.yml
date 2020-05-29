@@ -32,16 +32,22 @@ targets:
 
   # dv data
   # force rebuild of the inventories if you want to start over
-  10_nwis_pull/inout/nwis_dv_inventory.rds:
-    command: inventory_nwis(inv_file = target_name,
+  10_nwis_pull/inout/nwis_dv_inventory.rds.ind:
+    command: inventory_nwis(inv_ind = target_name,
       nwis_pull_params = nwis_pull_parameters, 
       service = I('dv'))
+      
+  10_nwis_pull/inout/nwis_dv_inventory.rds:
+    command: s3_get('10_nwis_pull/inout/nwis_dv_inventory.rds.ind')
   
   # uv data 
   10_nwis_pull/inout/nwis_uv_inventory.rds:
-    command: inventory_nwis(inv_file = target_name,
+    command: inventory_nwis(inv_ind = target_name,
       nwis_pull_params = nwis_pull_parameters, 
       service = I('uv'))
+      
+  10_nwis_pull/inout/nwis_uv_inventory.rds:
+    command: s3_get('10_nwis_pull/inout/nwis_uv_inventory.rds.ind')
     
   # create a table that compares services
   nwis_compare_services:
@@ -101,4 +107,4 @@ targets:
       - 10_nwis_pull/src/nwis_pull.R
       
   10_nwis_pull/out/nwis_uv_data.rds:
-    command: gd_get('10_nwis_pull/out/nwis_uv_data.rds.ind')
+    command: s3_get('10_nwis_pull/out/nwis_uv_data.rds.ind')

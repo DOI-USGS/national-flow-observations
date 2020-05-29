@@ -20,4 +20,4 @@ targets:
       out_ind = target_name)
       
   20_data_munge/out/daily_temperatures.rds:
-    command: gd_get('20_data_munge/out/daily_temperatures.rds.ind')
+    command: s3_get('20_data_munge/out/daily_temperatures.rds.ind')
