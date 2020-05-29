@@ -1,0 +1,12 @@
+version: 0.3.0
+name: 10_nwis_pull/inout/nwis_dv_inventory.rds.ind
+type: file
+hash: d63e68c4f4208bea3cb3617f35c1d791
+time: 2020-05-29 18:37:20 UTC
+depends:
+  nwis_pull_parameters: 57c2e26a41e3fae8ebc738a755b8dcca
+fixed: ebaa47496193446664a32e75b2e0b740
+code:
+  functions:
+    inventory_nwis: a914a08d0e344f79bea8468f1542d0bf
+

@@ -3,7 +3,6 @@ target_default: 10_nwis_pull
 packages:
   - dataRetrieval
   - yaml
-  - maps
   - scipiper
   - dplyr
   
@@ -41,7 +40,7 @@ targets:
     command: s3_get('10_nwis_pull/inout/nwis_dv_inventory.rds.ind')
   
   # uv data 
-  10_nwis_pull/inout/nwis_uv_inventory.rds:
+  10_nwis_pull/inout/nwis_uv_inventory.rds.ind:
     command: inventory_nwis(inv_ind = target_name,
       nwis_pull_params = nwis_pull_parameters, 
       service = I('uv'))
