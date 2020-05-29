@@ -10,10 +10,9 @@ sources:
 targets:
   20_data_munge:
     depends:
-      - 20_data_munge/out/wqp_daily_depths.rds.ind
-      - 20_data_munge/out/wqp_daily_nodepths.rds.ind
+      - 20_data_munge/out/daily_temperatures.rds.ind
     
-# -- For WQP and NWISuv, first do a coarse QA, then reduce to daily  -- #
+# -- For NWISuv, first do a coarse QA, then reduce to daily  -- #
 # -- For NWISdv, do the coarse QA  -- #
 
   min_value:
