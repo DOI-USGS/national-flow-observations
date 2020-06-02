@@ -63,14 +63,22 @@ targets:
   nwis_uv_inventory_reduced:
     command: reduce_redundancy(compare = nwis_compare_services)
 
+  ##########ONLY KEEP 5 SITES FOR TESTING PURPOSES
+  nwis_dv_temp: 
+    command: subset_for_testing(nwis_dv_inventory)
+  
+  nwis_uv_temp: 
+    command: subset_for_testing(nwis_uv_inventory_reduced)
+  ##########ONLY KEEP 5 SITES FOR TESTING PURPOSES
+
   # -- partition data -- #
   # dv
   nwis_dv_partition:
-    command: partition_inventory(inventory = nwis_dv_inventory, nwis_pull_size) 
+    command: partition_inventory(inventory = nwis_dv_temp, nwis_pull_size) 
     
   #uv
   nwis_uv_partition:
-    command: partition_inventory(inventory = nwis_uv_inventory_reduced, nwis_pull_size) 
+    command: partition_inventory(inventory = nwis_uv_temp, nwis_pull_size) 
     
   # -- create and execute tasks from pull table -- #
 

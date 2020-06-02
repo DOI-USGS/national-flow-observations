@@ -16,8 +16,14 @@ inventory_nwis <- function(inv_ind, nwis_pull_params, service) {
     all_dat <- rbind(all_dat, sites)
     
   }
+  
   data_file <- scipiper::as_data_file(inv_ind)
   saveRDS(all_dat, data_file)
   s3_put(inv_ind)
   
+}
+
+subset_for_testing <- function(all_dat, n = 5) {
+  set.seed(10)
+  dplyr::sample_n(all_dat, n)
 }
