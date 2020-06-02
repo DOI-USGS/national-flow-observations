@@ -10,14 +10,14 @@ sources:
 targets:
   20_data_munge:
     depends:
-      - 20_data_munge/out/daily_temperatures.rds.ind
+      - 20_data_munge/out/daily_flow.rds.ind
     
   # reduce uv to dailies, add source col, bring it all together. 
-  20_data_munge/out/daily_temperatures.rds.ind:
+  20_data_munge/out/daily_flow.rds.ind:
     command: combine_all_dat(
       nwis_dv_ind  = '10_nwis_pull/out/nwis_dv_data.rds.ind',
       nwis_uv_ind = '10_nwis_pull/out/nwis_uv_data.rds.ind',
       out_ind = target_name)
       
-  20_data_munge/out/daily_temperatures.rds:
-    command: s3_get('20_data_munge/out/daily_temperatures.rds.ind')
+  20_data_munge/out/daily_flow.rds:
+    command: s3_get('20_data_munge/out/daily_flow.rds.ind')

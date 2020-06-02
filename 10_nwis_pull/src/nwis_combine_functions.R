@@ -28,8 +28,8 @@ choose_flow_column <- function(temp_dat) {
   # take all flow columns and put into long df
   values <- temp_dat %>%
     select(-ends_with('_cd'), -agency_cd) %>%
-    tidyr::gather(key = 'col_name', value = 'temp_value', -site_no, -dateTime) %>%
-    filter(!is.na(temp_value))
+    tidyr::gather(key = 'col_name', value = 'flow_value', -site_no, -dateTime) %>%
+    filter(!is.na(flow_value))
   
   # take all flow cd columns and do the same thing
   codes <- temp_dat %>%
