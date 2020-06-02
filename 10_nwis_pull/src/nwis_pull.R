@@ -73,15 +73,29 @@ filter_partitions <- function(partitions, pull_task) {
 # pull a batch of NWIS observations, save locally
 get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbose = TRUE) {
   
-  nwis_pull_params$service <- service
   nwis_pull_params$site <- partition$site_no
   
-  if (service == 'dv') { nwis_pull_params$statCd <- '00003' }
+  # Use readNWISdv and readNWISuv because readNWISdata does not work for
+  # service="uv" when startDate = "" or something < 1900-01-01. 
+  #   E.g. these throw errors 
+  #   nwis_dat <- readNWISuv(site = "05406500", parameterCd = "00060", startDate = "1890-01-01", endDate = "2020-05-22")
+  #   nwis_dat <- readNWISuv(site = "05406500", parameterCd = "00060", startDate = "", endDate = "2020-05-22")
   
-  # do the data pull
-  nwis_dat_time <- system.time({
-    nwis_dat <- do.call(readNWISdata, nwis_pull_params)
-  })
+  if (service == 'dv') { 
+    nwis_pull_params$statCd <- '00003' 
+    
+    # do the data pull
+    nwis_dat_time <- system.time({
+      nwis_dat <- do.call(readNWISdv, nwis_pull_params)
+    })
+  }
+  
+  if (service == 'uv') { 
+    # do the data pull
+    nwis_dat_time <- system.time({
+      nwis_dat <- do.call(readNWISuv, nwis_pull_params)
+    })
+  }
   
   if (verbose){
     message(sprintf(
