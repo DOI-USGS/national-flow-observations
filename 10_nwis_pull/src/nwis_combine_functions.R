@@ -7,9 +7,9 @@ combine_nwis_data <- function(ind_file, ...){
   
   for (i in seq_len(length(rds_files))){
     
-    temp_dat <- readRDS(rds_files[i]) 
+    flow_dat <- readRDS(rds_files[i]) 
     
-    reduced_dat <- choose_flow_column(temp_dat)
+    reduced_dat <- choose_flow_column(flow_dat)
     
     df_list[[i]] <- reduced_dat
   }
@@ -24,15 +24,15 @@ combine_nwis_data <- function(ind_file, ...){
 
 
 
-choose_flow_column <- function(temp_dat) {
+choose_flow_column <- function(flow_dat) {
   # take all flow columns and put into long df
-  values <- temp_dat %>%
+  values <- flow_dat %>%
     select(-ends_with('_cd'), -agency_cd) %>%
     tidyr::gather(key = 'col_name', value = 'flow_value', -site_no, -dateTime) %>%
     filter(!is.na(flow_value))
   
   # take all flow cd columns and do the same thing
-  codes <- temp_dat %>%
+  codes <- flow_dat %>%
     select(site_no, dateTime, ends_with('_cd'), -tz_cd, -agency_cd) %>%
     tidyr::gather(key = 'col_name', value = 'cd_value', -site_no, -dateTime) %>%
     mutate(col_name = gsub('_cd', '', col_name)) %>%
