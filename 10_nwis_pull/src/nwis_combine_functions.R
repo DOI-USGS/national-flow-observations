@@ -25,21 +25,27 @@ combine_nwis_data <- function(ind_file, ...){
 
 
 choose_flow_column <- function(flow_dat) {
+  
+  # For "dv", dates are in a column called `Date`
+  # For "uv" dates are in `dateTime` and there is also a `tz_cd` column
+  date_col_nm <- names(flow_dat)[grepl("date|Date", names(flow_dat))]
+  tz_col_nm <- names(flow_dat)[grepl("tz_cd", names(flow_dat))] # If empty, matches(tx_col_nm) still works
+  
   # take all flow columns and put into long df
   values <- flow_dat %>%
     select(-ends_with('_cd'), -agency_cd) %>%
-    tidyr::gather(key = 'col_name', value = 'flow_value', -site_no, -dateTime) %>%
+    tidyr::gather(key = 'col_name', value = 'flow_value', -site_no, -matches(date_col_nm)) %>%
     filter(!is.na(flow_value))
   
   # take all flow cd columns and do the same thing
   codes <- flow_dat %>%
-    select(site_no, dateTime, ends_with('_cd'), -tz_cd, -agency_cd) %>%
-    tidyr::gather(key = 'col_name', value = 'cd_value', -site_no, -dateTime) %>%
+    select(site_no, ends_with('_cd'), -matches(tz_col_nm), -agency_cd, matches(date_col_nm)) %>%
+    tidyr::gather(key = 'col_name', value = 'cd_value', -site_no, -matches(date_col_nm)) %>%
     mutate(col_name = gsub('_cd', '', col_name)) %>%
     filter(!is.na(cd_value))
   
   # bring together so I have a long df with both temp and cd values
-  all_dat <- left_join(values, codes, by = c('site_no', 'dateTime', 'col_name'))
+  all_dat <- left_join(values, codes, by = c('site_no', date_col_nm, 'col_name'))
   
   # find which col_name has the most records for each site,
   # and keep that column
