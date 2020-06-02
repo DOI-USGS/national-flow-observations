@@ -1,0 +1,19 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Data files
+*.rds
+*.Rds
+*.feather
+*.Feather
+*.Rdata
+.httr-oauth
+
+# remake
+.remake/
+
+# task plans
+**_tasks.yml
