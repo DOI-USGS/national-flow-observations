@@ -22,8 +22,3 @@ inventory_nwis <- function(inv_ind, nwis_pull_params, service) {
   s3_put(inv_ind)
   
 }
-
-subset_for_testing <- function(all_dat, n = 5) {
-  set.seed(10)
-  dplyr::sample_n(all_dat, n)
-}
