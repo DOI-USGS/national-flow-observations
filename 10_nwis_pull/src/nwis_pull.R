@@ -76,7 +76,6 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
   nwis_pull_params$service <- service
   nwis_pull_params$site <- partition$site_no
   
-  dataRetrieval::setAccess(access = 'internal')
   if (service == 'dv') { nwis_pull_params$statCd <- '00003' }
   
   # do the data pull
