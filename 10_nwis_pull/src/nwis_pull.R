@@ -1,17 +1,12 @@
 #### pull ####
 
-# prepare a plan for downloading (from NWIS) and posting (to GD) one data file
+# prepare a plan for downloading (from NWIS) and posting (to S3) one data file
 # per state
 plan_nwis_pull <- function(partitions, service) {
 
-  folders <- list(
-    tmp='10_nwis_pull/tmp',
-    out='10_nwis_pull/out',
-    log='10_nwis_pull/log')
+  folders <- list(tmp='10_nwis_pull/tmp')
   
-  # after all wanted data have been pulled, this function will be called but
-  # doesn't need to create anything much, so just return NULL
-  # isolate the partition info for just one task
+  # create partition step
   partitions_name <- deparse(substitute(partitions))
   partition <- scipiper::create_task_step(
     step_name = 'partition',
@@ -23,9 +18,7 @@ plan_nwis_pull <- function(partitions, service) {
     }
   )
 
-  # download from NWIS, save, and create .ind file promising the download is
-  # complete, with extension .tind ('temporary indicator') because we don't want
-  # scipiper to make a build/status file for it
+  # download from NWIS, save locally
 
   download <- scipiper::create_task_step(
     step_name = 'download',
@@ -62,8 +55,8 @@ create_nwis_pull_makefile <- function(makefile, task_plan, final_targets) {
     makefile=makefile, task_plan=task_plan,
     include = c('10_nwis_pull.yml'),
     sources = c('10_nwis_pull/src/nwis_pull.R', '10_nwis_pull/src/nwis_combine_functions.R'),
-    packages=c('dplyr', 'dataRetrieval', 'feather', 'scipiper', 'yaml', 'stringr'),
-    file_extensions=c('ind','feather'), finalize_funs = 'combine_nwis_data', final_targets = final_targets)
+    packages=c('dplyr', 'dataRetrieval', 'scipiper', 'yaml', 'stringr'),
+    file_extensions=c('ind'), finalize_funs = 'combine_nwis_data', final_targets = final_targets)
 }
 
 # --- functions used in task table ---
@@ -77,7 +70,7 @@ filter_partitions <- function(partitions, pull_task) {
   return(these_partitions)  
 }
 
-# pull a batch of NWIS observations, save locally, return .tind file
+# pull a batch of NWIS observations, save locally
 get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbose = TRUE) {
   
   nwis_pull_params$service <- service

@@ -7,9 +7,7 @@ partition_inventory <- function(inventory, nwis_pull_size) {
   
   if (grepl('nwis_uv', inventory_name)) {
     inventory$count_nu <- inventory$count_nu*96
-  } else {
-    inventory <- readRDS(inventory)
-  }
+  } 
   
   # first, get rid of duplicate sites from whatNWISdata call
   # do not need to pull sites twice

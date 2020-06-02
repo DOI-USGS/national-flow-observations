@@ -38,6 +38,9 @@ targets:
       
   10_nwis_pull/inout/nwis_dv_inventory.rds:
     command: s3_get('10_nwis_pull/inout/nwis_dv_inventory.rds.ind')
+    
+  nwis_dv_inventory:
+    command: readRDS('10_nwis_pull/inout/nwis_dv_inventory.rds')
   
   # uv data 
   10_nwis_pull/inout/nwis_uv_inventory.rds.ind:
@@ -63,7 +66,7 @@ targets:
   # -- partition data -- #
   # dv
   nwis_dv_partition:
-    command: partition_inventory(inventory = '10_nwis_pull/inout/nwis_dv_inventory.rds', nwis_pull_size) 
+    command: partition_inventory(inventory = nwis_dv_inventory, nwis_pull_size) 
     
   #uv
   nwis_uv_partition:
@@ -89,7 +92,7 @@ targets:
       - 10_nwis_pull/src/nwis_pull.R
       
   10_nwis_pull/out/nwis_dv_data.rds:
-    command: gd_get('10_nwis_pull/out/nwis_dv_data.rds.ind')
+    command: s3_get('10_nwis_pull/out/nwis_dv_data.rds.ind')
       
   #uv
   nwis_uv_pull_plan:
