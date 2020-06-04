@@ -93,7 +93,11 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
   if (service == 'uv') { 
     # do the data pull
     nwis_dat_time <- system.time({
-      nwis_dat <- do.call(readNWISuv, nwis_pull_params)
+      nwis_dat <- handle_timeout(
+        site = nwis_pull_params$site,
+        expr = do.call(readNWISuv, nwis_pull_params),
+        seconds_allowed = 60*30 # sec/min times minutes
+      )
     })
   }
   
@@ -112,4 +116,26 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
   # results because remake expects this function to always create the target
   # file
   saveRDS(nwis_dat, data_file)
+}
+
+# For UV, sometimes the pull can get stuck on a particular site
+# for several hours. Sometimes, retriggering the call works, 
+# but sometimes it may eventually need to be manually pulled.
+# E.g. handle_timeout("0540410239", Sys.sleep(5), 3)
+handle_timeout <- function(site, expr, seconds_allowed, 
+                           timeout_site_yml = "10_nwis_pull/inout/uv_sites_timeout.yml") {
+  tryCatch({
+    R.utils::withTimeout({
+      eval(substitute(expr))
+    }, timeout = seconds_allowed)
+  }, 
+  TimeoutException = function(ex) {
+    # To let the pipeline continue without killing it mid-process,
+    # this function will return an empty data.frame if it is taking
+    # too long and record the bad sites in a file.
+    write(site, file=timeout_site_yml, append=TRUE)
+    message(sprintf("Timeout: added %s to `%s`", site, timeout_site_yml))
+    return(data.frame())
+  })
+  
 }
