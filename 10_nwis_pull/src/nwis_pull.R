@@ -93,11 +93,7 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
   if (service == 'uv') { 
     # do the data pull
     nwis_dat_time <- system.time({
-      nwis_dat <- handle_timeout(
-        site = nwis_pull_params$site,
-        expr = do.call(readNWISuv, nwis_pull_params),
-        seconds_allowed = 60*30 # sec/min times minutes
-      )
+      nwis_dat <- do.call(readNWISuv, nwis_pull_params)
     })
   }
   
@@ -119,9 +115,13 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
 }
 
 # For UV, sometimes the pull can get stuck on a particular site
-# for several hours. Sometimes, retriggering the call works, 
-# but sometimes it may eventually need to be manually pulled.
-# E.g. handle_timeout("0540410239", Sys.sleep(5), 3)
+#   for several hours. Sometimes, retriggering the call works, 
+#   but sometimes it may eventually need to be manually pulled.
+#   E.g. handle_timeout("0540410239", Sys.sleep(5), 3)
+# NOT IN USE. This was created due to issues with pulling UV
+#   temperature. After building flow once, it
+#   was not needed for any UV flow. Leaving the function here
+#   but it is not currently being used in `get_nwis_data`
 handle_timeout <- function(site, expr, seconds_allowed, 
                            timeout_site_yml = "10_nwis_pull/inout/uv_sites_timeout.yml") {
   tryCatch({
