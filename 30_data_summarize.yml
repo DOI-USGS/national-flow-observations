@@ -3,14 +3,16 @@ target_default: 30_data_summarize
 packages:
   - scipiper
   - dplyr
+  - purrr
 
 sources:
-  - 30_data_summarize/src/tally_active_flow_gages.R
+  - 30_data_summarize/src/summarize_active_flow_gages.R
 
 targets:
   30_data_summarize:
     depends:
       - 30_data_summarize/out/active_flow_gages.rds.ind
+      - 30_data_summarize/out/active_flow_gages_summary.rds.ind
 
   # tally how many active flow gages there were per year
   30_data_summarize/out/active_flow_gages.rds.ind:
@@ -21,3 +23,12 @@ targets:
   
   30_data_summarize/out/active_flow_gages.rds:
     command: s3_get('30_data_summarize/out/active_flow_gages.rds.ind')
+  
+  # summarize information about active gages - gaps?, continuous?, etc.
+  30_data_summarize/out/active_flow_gages_summary.rds.ind:
+    command: summarize_activity_by_gage(
+      out_ind = target_name,
+      annual_active_gages_ind  = '30_data_summarize/out/active_flow_gages.rds.ind')
+  
+  30_data_summarize/out/active_flow_gages_summary.rds:
+    command: s3_get('30_data_summarize/out/active_flow_gages_summary.rds.ind')
