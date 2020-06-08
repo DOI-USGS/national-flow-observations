@@ -2,8 +2,12 @@ target_default: everything
 
 include:
   - 10_nwis_pull.yml
+  - 20_data_munge.yml
+  - 30_data_summarize.yml
 
 targets:
   everything:
     depends:
       - 10_nwis_pull
+      - 20_data_munge
+      - 30_data_summarize

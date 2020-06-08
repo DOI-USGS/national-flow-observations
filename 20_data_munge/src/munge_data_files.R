@@ -1,9 +1,9 @@
 combine_all_dat <- function(nwis_dv_ind, nwis_uv_ind, out_ind) {
   
-  nwis_uv <- readRDS(sc_retrieve(in_ind)) %>%
+  nwis_uv <- readRDS(sc_retrieve(nwis_uv_ind)) %>%
     filter(!is.na(flow_value), !is.na(dateTime)) %>%
-    mutate(dateTime = as.Date(dateTime)) %>%
-    group_by(site_no, col_name, dateTime) %>%
+    mutate(date = as.Date(dateTime)) %>%
+    group_by(site_no, col_name, date) %>%
     summarize(daily_flow = round(mean(flow_value), 3), 
               cd_value = paste0(unique(cd_value), collapse = ','),
               n_obs = n()) %>%
@@ -12,7 +12,7 @@ combine_all_dat <- function(nwis_dv_ind, nwis_uv_ind, out_ind) {
     select(site_id = site_no, date, flow_cfs = daily_flow, n_obs, source)
   
   nwis_dv <- readRDS(sc_retrieve(nwis_dv_ind)) %>%
-    mutate(date = as.Date(dateTime),
+    mutate(date = Date,
            source = 'nwis_dv', 
            n_obs = 1) %>%
     select(site_id = site_no, date, flow_cfs = flow_value, n_obs, source)
@@ -25,4 +25,3 @@ combine_all_dat <- function(nwis_dv_ind, nwis_uv_ind, out_ind) {
   s3_put(out_ind)
   
 }
-  
