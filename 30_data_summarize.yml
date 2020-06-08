@@ -7,12 +7,14 @@ packages:
 
 sources:
   - 30_data_summarize/src/summarize_active_flow_gages.R
+  - 30_data_summarize/src/record_diagnostics_active_flow_gages.R
 
 targets:
   30_data_summarize:
     depends:
       - 30_data_summarize/out/active_flow_gages.rds.ind
       - 30_data_summarize/out/active_flow_gages_summary.rds.ind
+      - 30_data_summarize/out/active_flow_gages_diagnostics.png
 
   # tally how many active flow gages there were per year
   30_data_summarize/out/active_flow_gages.rds.ind:
@@ -32,3 +34,10 @@ targets:
   
   30_data_summarize/out/active_flow_gages_summary.rds:
     command: s3_get('30_data_summarize/out/active_flow_gages_summary.rds.ind')
+  
+  # diagnostics about active gages
+  30_data_summarize/out/active_flow_gages_diagnostics.png:
+    command: summarize_active_flow_gages(
+      target_file = target_name,
+      active_gages_ind = '30_data_summarize/out/active_flow_gages.rds.ind',
+      active_gages_summary_ind = '30_data_summarize/out/active_flow_gages_summary.rds.ind')

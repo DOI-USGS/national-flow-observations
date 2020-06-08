@@ -11,12 +11,14 @@ sources:
   - 10_nwis_pull/src/nwis_pull.R
   - 10_nwis_pull/src/compare_nwis_services.R
   - 10_nwis_pull/src/nwis_partition.R
+  - 10_nwis_pull/src//summarize_nwis_pull.R
 
 targets:
   10_nwis_pull:
     depends:
       - 10_nwis_pull/out/nwis_dv_data.rds.ind
       - 10_nwis_pull/out/nwis_uv_data.rds.ind
+      - 10_nwis_pull/out/nwis_pull_diagnostics.yml
       
 # -- get a CONUS inventory of available data for download -- #
 
@@ -110,3 +112,11 @@ targets:
       
   10_nwis_pull/out/nwis_uv_data.rds:
     command: s3_get('10_nwis_pull/out/nwis_uv_data.rds.ind')
+  
+  # diagnostics from big pull
+  10_nwis_pull/out/nwis_pull_diagnostics.yml:
+    command: summarize_nwis_pull(
+      target_file = target_name,
+      nwis_dv_ind = '10_nwis_pull/out/nwis_dv_data.rds.ind',
+      nwis_uv_ind = '10_nwis_pull/out/nwis_uv_data.rds.ind')
+  
