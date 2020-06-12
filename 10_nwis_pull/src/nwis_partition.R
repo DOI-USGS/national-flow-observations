@@ -1,4 +1,4 @@
-partition_inventory <- function(inventory, nwis_pull_size) {
+partition_inventory <- function(inventory, nwis_pull_size, pull_id) {
   
   # uv data count number is the number of days between the min and max observation days
   # assume that each day has 15 minute data, which is 96 obs/day
@@ -45,9 +45,7 @@ partition_inventory <- function(inventory, nwis_pull_size) {
   # Prepare one data_frame containing info about each site, including
   # the pull, constituent, and task name (where task name will become the core
   # of the filename)
-  pull_time <- Sys.time()
-  attr(pull_time, 'tzone') <- 'UTC'
-  pull_id <- format(pull_time, '%y%m%d')
+  pull_time <- as.Date(pull_id, '%y%m%d')
 
   partitions <- atomic_groups %>%
     mutate(PullDate = format(pull_time, '%Y-%m-%d'),
