@@ -25,8 +25,10 @@ targets:
   # Edit this to be the current day (YYMMDD) if you want to force a 
   #   re-download of the data even if the inventory hasn't changed OR
   #   if you are forcing an entire rebuild, including the inventory.
-  pull_id:
+  pull_id_dv:
     command: c(I("200602"))
+  pull_id_uv:
+    command: c(I("200603"))
 
   # modify end date to extend data pull
   nwis_pull_parameters:
@@ -74,11 +76,11 @@ targets:
   # -- partition data -- #
   # dv
   nwis_dv_partition:
-    command: partition_inventory(inventory = nwis_dv_inventory, nwis_pull_size, pull_id) 
+    command: partition_inventory(inventory = nwis_dv_inventory, nwis_pull_size, pull_id_dv) 
     
   #uv
   nwis_uv_partition:
-    command: partition_inventory(inventory = nwis_uv_inventory_reduced, nwis_pull_size, pull_id) 
+    command: partition_inventory(inventory = nwis_uv_inventory_reduced, nwis_pull_size, pull_id_uv) 
     
   # -- create and execute tasks from pull table -- #
 
