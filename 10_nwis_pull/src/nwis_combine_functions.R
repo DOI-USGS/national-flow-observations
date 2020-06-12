@@ -9,7 +9,7 @@ combine_nwis_data <- function(ind_file, ...){
     
     flow_dat <- readRDS(rds_files[i]) 
     
-    reduced_dat <- choose_flow_column(flow_dat)
+    reduced_dat <- convert_to_long(flow_dat)
     
     df_list[[i]] <- reduced_dat
   }
@@ -24,7 +24,7 @@ combine_nwis_data <- function(ind_file, ...){
 
 
 
-choose_flow_column <- function(flow_dat) {
+convert_to_long <- function(flow_dat) {
   
   # For "dv", dates are in a column called `Date`
   # For "uv" dates are in `dateTime` and there is also a `tz_cd` column
