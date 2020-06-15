@@ -26,9 +26,9 @@ targets:
   #   re-download of the data even if the inventory hasn't changed OR
   #   if you are forcing an entire rebuild, including the inventory.
   pull_id_dv:
-    command: c(I("200602"))
+    command: c(I("200612"))
   pull_id_uv:
-    command: c(I("200603"))
+    command: c(I("200612"))
 
   # modify end date to extend data pull
   nwis_pull_parameters:
