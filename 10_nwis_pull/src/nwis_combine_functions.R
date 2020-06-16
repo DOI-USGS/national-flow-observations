@@ -34,8 +34,7 @@ convert_to_long <- function(flow_dat) {
   # take all flow columns and put into long df
   values <- flow_dat %>%
     select(-ends_with('_cd'), -agency_cd) %>%
-    tidyr::gather(key = 'col_name', value = 'flow_value', -site_no, -matches(date_col_nm)) %>%
-    filter(!is.na(flow_value))
+    tidyr::gather(key = 'col_name', value = 'flow_value', -site_no, -matches(date_col_nm))
   
   # take all flow cd columns and do the same thing
   codes <- flow_dat %>%
@@ -45,7 +44,12 @@ convert_to_long <- function(flow_dat) {
     filter(!is.na(cd_value))
   
   # bring together so I have a long df with both temp and cd values
-  all_dat <- left_join(values, codes, by = c('site_no', date_col_nm, 'col_name'))
+  all_dat <- left_join(values, codes, by = c('site_no', date_col_nm, 'col_name')) %>% 
+    # Only filter out NA flow if it doesn't have a Provisional Ice flag
+    # "P Ice" means that a WSC hasn't finished processing records but there 
+    # might be an actual flow value after processing. If you can,
+    # dataRetrieval::setAccess("internal") would show the under ice flows.
+    filter(!is.na(flow_value) && cd_value != "P Ice")
   
   # find which col_name has the most records for each site,
   # and keep that column
