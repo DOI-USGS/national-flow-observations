@@ -127,4 +127,3 @@ targets:
       target_file = target_name,
       nwis_dv_ind = '10_nwis_pull/out/nwis_dv_data.rds.ind',
       nwis_uv_ind = '10_nwis_pull/out/nwis_uv_data.rds.ind')
-  
