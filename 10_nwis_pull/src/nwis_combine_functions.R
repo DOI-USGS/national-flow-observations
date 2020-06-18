@@ -49,7 +49,7 @@ convert_to_long <- function(flow_dat) {
     # "P Ice" means that a WSC hasn't finished processing records but there 
     # might be an actual flow value after processing. If you can,
     # dataRetrieval::setAccess("internal") would show the under ice flows.
-    filter(!is.na(flow_value) && cd_value != "P Ice")
+    filter(!is.na(flow_value) | cd_value == "P Ice")
   
   # find which col_name has the most records for each site,
   # and keep that column
