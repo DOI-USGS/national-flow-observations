@@ -4,7 +4,7 @@ combine_all_dat <- function(nwis_dv_ind, nwis_uv_ind, out_ind) {
     filter(!is.na(flow_value), !is.na(dateTime)) %>%
     mutate(date = as.Date(dateTime)) %>%
     group_by(site_no, col_name, date) %>%
-    summarize(daily_flow = round(mean(flow_value), 3), 
+    summarize(daily_flow = round(mean(flow_value, na.rm = TRUE), 3), 
               cd_value = paste0(unique(cd_value), collapse = ','),
               n_obs = n()) %>%
     ungroup() %>%
