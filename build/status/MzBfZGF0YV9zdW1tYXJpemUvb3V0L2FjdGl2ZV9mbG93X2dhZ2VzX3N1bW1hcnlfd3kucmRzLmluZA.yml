@@ -1,0 +1,12 @@
+version: 0.3.0
+name: 30_data_summarize/out/active_flow_gages_summary_wy.rds.ind
+type: file
+hash: 760faaaf477ce2e3af917a2ff431ede8
+time: 2020-06-24 03:26:42 UTC
+depends:
+  30_data_summarize/out/active_flow_gages_wy.rds.ind: 72c26f7aca951e81a3f037abce7865c6
+fixed: 376d3404aef29ed0318f7b77260bdd1b
+code:
+  functions:
+    summarize_activity_by_gage: ddd64746747a93fb6cd2b58648aa2f8e
+
