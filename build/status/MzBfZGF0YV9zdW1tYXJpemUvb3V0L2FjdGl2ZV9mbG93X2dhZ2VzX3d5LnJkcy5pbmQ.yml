@@ -1,11 +1,11 @@
 version: 0.3.0
-name: 30_data_summarize/out/active_flow_gages.rds.ind
+name: 30_data_summarize/out/active_flow_gages_wy.rds.ind
 type: file
-hash: badcfeddc6a21fdb4e03cb743878ed22
-time: 2020-06-24 13:03:17 UTC
+hash: 72c26f7aca951e81a3f037abce7865c6
+time: 2020-06-24 13:13:13 UTC
 depends:
   20_data_munge/out/daily_flow.rds.ind: 321ba00b14ed1d6c0aaaec7f30bb7390
-fixed: b5b566c79b95e42962f62e82b15497bf
+fixed: b1922d89fa0dc33431b1b869b82bfe58
 code:
   functions:
     extract_yr: 3178fdbb2aa4a22ccb20f18a65594549
