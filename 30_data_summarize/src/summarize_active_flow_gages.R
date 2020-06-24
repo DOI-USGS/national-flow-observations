@@ -1,7 +1,10 @@
-tally_active_flow_gages <- function(out_ind, all_dat_ind, min_days_active) {
+
+tally_active_flow_gages <- function(out_ind, all_dat_ind, min_days_active, water_yr = FALSE) {
   
   active_gages_per_year <- readRDS(sc_retrieve(all_dat_ind)) %>% 
-    mutate(year = format(date, "%Y")) %>% 
+    # Use dataRetrieval's `calcWaterYear` to use water years instead
+    # of calendar years for grouping and determining gage activity.
+    mutate(year = extract_yr(date, water_yr)) %>% 
     group_by(site_id, year) %>% 
     summarize(n_obs_per_year = n()) %>% 
     ungroup() %>% 
@@ -60,4 +63,12 @@ summarize_activity_by_gage <- function(out_ind, annual_active_gages_ind) {
   data_file <- scipiper::as_data_file(out_ind)
   saveRDS(gages_activity, data_file)
   s3_put(out_ind)
+}
+
+extract_yr <- function(date_col, water_yr) {
+  if(water_yr) {
+    calcWaterYear(date_col)
+  } else {
+    as.numeric(format(date_col, "%Y"))
+  }
 }
