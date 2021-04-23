@@ -5,6 +5,7 @@ packages:
   - yaml
   - scipiper
   - dplyr
+  - data.table
   
 sources:
   - 10_nwis_pull/src/inventory_nwis.R
@@ -26,9 +27,9 @@ targets:
   #   re-download of the data even if the inventory hasn't changed OR
   #   if you are forcing an entire rebuild, including the inventory.
   pull_id_dv:
-    command: c(I("210421"))
+    command: c(I("210422"))
   pull_id_uv:
-    command: c(I("210421"))
+    command: c(I("210422"))
 
   # modify end date to extend data pull
   nwis_pull_parameters:
@@ -93,14 +94,18 @@ targets:
 
   10_nwis_dv_pull_tasks.yml:
     command: create_nwis_pull_makefile(makefile=target_name, task_plan=nwis_dv_pull_plan,
-      final_targets = I('10_nwis_pull/out/nwis_dv_data.rds.ind'))
+      final_targets = I('10_nwis_pull/tmp/nwis_dv_data.rds.ind'))
 
-  10_nwis_pull/out/nwis_dv_data.rds.ind:
+  10_nwis_pull/tmp/nwis_dv_data.rds.ind:
     command: loop_tasks(task_plan=nwis_dv_pull_plan, task_makefile='10_nwis_dv_pull_tasks.yml',
       num_tries=I(30), sleep_on_error=I(20))
     depends:
       - 10_nwis_pull/src/nwis_pull.R
-      
+  
+  10_nwis_pull/out/nwis_dv_data.rds.ind:
+    command: s3_put(remote_ind = target_name,
+                    local_source = '10_nwis_pull/tmp/nwis_dv_data.rds.ind')
+  
   10_nwis_pull/out/nwis_dv_data.rds:
     command: s3_get('10_nwis_pull/out/nwis_dv_data.rds.ind')
       
@@ -110,14 +115,18 @@ targets:
 
   10_nwis_uv_pull_tasks.yml:
     command: create_nwis_pull_makefile(makefile=target_name, task_plan=nwis_uv_pull_plan,
-      final_targets = I('10_nwis_pull/out/nwis_uv_data.rds.ind'))
+      final_targets = I('10_nwis_pull/tmp/nwis_uv_data.rds.ind'))
 
-  10_nwis_pull/out/nwis_uv_data.rds.ind:
+  10_nwis_pull/tmp/nwis_uv_data.rds.ind:
     command: loop_tasks(task_plan=nwis_uv_pull_plan, task_makefile='10_nwis_uv_pull_tasks.yml',
       num_tries=I(30), sleep_on_error=I(20))
     depends:
       - 10_nwis_pull/src/nwis_pull.R
-      
+
+  10_nwis_pull/out/nwis_uv_data.rds.ind:
+    command: s3_put(remote_ind = target_name,
+                    local_source = '10_nwis_pull/tmp/nwis_uv_data.rds.ind')
+  
   10_nwis_pull/out/nwis_uv_data.rds:
     command: s3_get('10_nwis_pull/out/nwis_uv_data.rds.ind')
   
