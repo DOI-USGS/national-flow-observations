@@ -9,6 +9,7 @@ packages:
 sources:
   - 30_data_summarize/src/summarize_active_flow_gages.R
   - 30_data_summarize/src/record_diagnostics_active_flow_gages.R
+  - 30_data_summarize/src/site_summary.R
 
 targets:
   30_data_summarize:
@@ -74,3 +75,13 @@ targets:
       target_file = target_name,
       active_gages_ind = '30_data_summarize/out/active_flow_gages_wy.rds.ind',
       active_gages_summary_ind = '30_data_summarize/out/active_flow_gages_summary_wy.rds.ind')
+  
+  #observation summary
+  30_data_summarize/out/observation_summary.rds.ind:
+    command: summarize_site_observations(target_ind = target_name, 
+      daily_flow_ind = '20_data_munge/out/daily_flow.rds.ind', 
+      dv_inventory = nwis_dv_inventory, 
+      uv_inventory = nwis_uv_inventory_reduced)
+      
+  30_data_summarize/out/observation_summary.rds:
+    command: s3_get('30_data_summarize/out/observation_summary.rds.ind')
