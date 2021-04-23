@@ -1,13 +1,11 @@
 version: 0.3.0
 name: 20_data_munge/out/daily_flow.rds.ind
 type: file
-hash: 321ba00b14ed1d6c0aaaec7f30bb7390
-time: 2020-06-18 15:45:28 UTC
+hash: 14915648b1ce9cc5b4e69564494ab1da
+time: 2021-04-23 23:12:36 UTC
 depends:
-  10_nwis_pull/out/nwis_dv_data.rds.ind: 9afcd6fca3b8478d5aca813680750201
-  10_nwis_pull/out/nwis_uv_data.rds.ind: 06847884ca526ef1bfbda8c8ceed4dd2
-fixed: 9292fe2eef8f2a8d6dfb48d00292b824
+  20_data_munge/tmp/daily_flow.rds.ind: 14915648b1ce9cc5b4e69564494ab1da
+fixed: d3d66e71dec900d822b5bcbd7227905c
 code:
-  functions:
-    combine_all_dat: 6ab215b77ba7d4df0a47dfc61267ab7c
+  functions: {}
 

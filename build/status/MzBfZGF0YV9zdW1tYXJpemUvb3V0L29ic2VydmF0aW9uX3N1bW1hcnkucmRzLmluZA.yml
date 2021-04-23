@@ -1,0 +1,14 @@
+version: 0.3.0
+name: 30_data_summarize/out/observation_summary.rds.ind
+type: file
+hash: 9cf39912abb7e72a4cf5a2eee1640c03
+time: 2021-04-23 23:33:03 UTC
+depends:
+  20_data_munge/out/daily_flow.rds.ind: 14915648b1ce9cc5b4e69564494ab1da
+  nwis_dv_inventory: 42e29de4bfe758fc56d7b932f030b263
+  nwis_uv_inventory_reduced: ad55ad6db8e545faeaccf5f8cfb6ebb1
+fixed: 19a3966655eec81e9d3bab55355283b9
+code:
+  functions:
+    summarize_site_observations: 9b19c5c36ba7540764ac9e00ad7ef3cc
+
