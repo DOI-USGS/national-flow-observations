@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  national-data-pull:
+    image: code.chs.usgs.gov:5001/wma/wp/national-data-pulls:v0.0
+    build:
+      context: .
+    ports:
+      - "8787:8787"
+    environment:
+      - ROOT=TRUE
+      #- PASSWORD=mypass
+
+volumes:
+  data:
+
