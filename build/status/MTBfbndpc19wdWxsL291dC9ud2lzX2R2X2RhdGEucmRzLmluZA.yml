@@ -1,13 +1,11 @@
 version: 0.3.0
 name: 10_nwis_pull/out/nwis_dv_data.rds.ind
 type: file
-hash: 5d095437231bdd8b0358202c890c07b6
-time: 2020-06-15 13:31:58 UTC
+hash: 74be1e3ea8478b59507f06840670d2a2
+time: 2021-04-23 22:30:48 UTC
 depends:
-  nwis_dv_pull_plan: 7e50af42d3562df410632ce68f3cb69f
-  10_nwis_dv_pull_tasks.yml: df689ecfcdacc9175f86e26ddda8d45f
-  10_nwis_pull/src/nwis_pull.R: 46509f66a62225fd8ccd24af297970c1
-fixed: c5cfdfacf90cb942deb045710cb0842c
+  10_nwis_pull/tmp/nwis_dv_data.rds.ind: 74be1e3ea8478b59507f06840670d2a2
+fixed: ea87c41e46c3d9d2cac1e098e505b695
 code:
   functions: {}
 

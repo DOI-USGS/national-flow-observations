@@ -1,0 +1,13 @@
+version: 0.3.0
+name: 10_nwis_pull/tmp/nwis_uv_data.rds.ind
+type: file
+hash: 3af547eff90e7940fe965b5ab6a3b210
+time: 2021-04-23 22:03:40 UTC
+depends:
+  nwis_uv_pull_plan: 0cccdd2858fd3e47f5a8deb766c28931
+  10_nwis_uv_pull_tasks.yml: 64a661478513c5c637dfbb65323e4473
+  10_nwis_pull/src/nwis_pull.R: 1b3be6fe89b03b042106e7bc29c7d1ab
+fixed: c5cfdfacf90cb942deb045710cb0842c
+code:
+  functions: {}
+

@@ -4,9 +4,9 @@ combine_nwis_data <- function(ind_file, ...){
   
   rds_files <- c(...)
   df_list <- list()
-  
+  message('reading in partition files...')
   for (i in seq_len(length(rds_files))){
-    
+    print(rds_files[i])
     flow_dat <- readRDS(rds_files[i]) 
     
     reduced_dat <- convert_to_long(flow_dat)
@@ -14,12 +14,12 @@ combine_nwis_data <- function(ind_file, ...){
     df_list[[i]] <- reduced_dat
   }
   
-  nwis_df <- do.call("bind_rows", df_list)
-  
+  nwis_df <- data.table::rbindlist(df_list)
   
   data_file <- scipiper::as_data_file(ind_file)
+  message('writing combined file...')
   saveRDS(nwis_df, data_file)
-  s3_put(ind_file)
+  sc_indicate(ind_file, data_file = data_file)
 }
 
 

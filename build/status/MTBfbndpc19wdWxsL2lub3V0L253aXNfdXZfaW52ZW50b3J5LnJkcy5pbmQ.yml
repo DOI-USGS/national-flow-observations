@@ -1,8 +1,8 @@
 version: 0.3.0
 name: 10_nwis_pull/inout/nwis_uv_inventory.rds.ind
 type: file
-hash: 07b6e3c24d331bdd255565b5aa61f1de
-time: 2020-06-12 22:02:26 UTC
+hash: 983a1f0698170b8290fb18f833530f68
+time: 2021-04-22 22:43:04 UTC
 depends:
   nwis_pull_parameters: 8fc395db21ede8aafa82ec20741f0527
 fixed: 0d1839ec92ff7e70229841e2f54ea0ac
