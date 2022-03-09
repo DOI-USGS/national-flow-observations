@@ -2,12 +2,12 @@
 # .ind file that we will want to share because it represents the shared cache
 combine_nwis_data <- function(ind_file, ...){
   
-  rds_files <- c(...)
+  qs_files <- c(...)
   df_list <- list()
   message('reading in partition files...')
-  for (i in seq_len(length(rds_files))){
+  for (i in seq_len(length(qs_files))){
     print(rds_files[i])
-    flow_dat <- readRDS(rds_files[i]) 
+    flow_dat <- qs::qread(qs_files[i]) 
     
     reduced_dat <- convert_to_long(flow_dat)
     

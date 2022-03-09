@@ -23,7 +23,7 @@ plan_nwis_pull <- function(partitions, service) {
   download <- scipiper::create_task_step(
     step_name = 'download',
     target_name = function(task_name, step_name, ...) {
-      file.path(folders$tmp, sprintf('%s_%s.rds', service, task_name))
+      file.path(folders$tmp, sprintf('%s_%s.qs', service, task_name))
     },
     command = function(steps, ...) {
       paste(
@@ -55,7 +55,7 @@ create_nwis_pull_makefile <- function(makefile, task_plan, final_targets) {
     makefile=makefile, task_plan=task_plan,
     include = c('10_nwis_pull.yml'),
     sources = c('10_nwis_pull/src/nwis_pull.R', '10_nwis_pull/src/nwis_combine_functions.R'),
-    packages=c('dplyr', 'dataRetrieval', 'scipiper', 'yaml', 'stringr'),
+    packages=c('dplyr', 'dataRetrieval', 'scipiper', 'yaml', 'stringr', 'qs'),
     file_extensions=c('ind'), finalize_funs = 'combine_nwis_data', final_targets = final_targets)
 }
 
@@ -108,10 +108,10 @@ get_nwis_data <- function(data_file, partition, nwis_pull_params, service, verbo
   # NULL (if there are no results)
   nwis_dat <- as_tibble(nwis_dat)
   
-  # write the data to rds file. do this even if there were 0
+  # write the data to `qs` file. do this even if there were 0
   # results because remake expects this function to always create the target
   # file
-  saveRDS(nwis_dat, data_file)
+  qs::qsave(nwis_dat, data_file)
 }
 
 # For UV, sometimes the pull can get stuck on a particular site
