@@ -6,7 +6,7 @@ combine_nwis_data <- function(ind_file, ...){
   df_list <- list()
   message('reading in partition files...')
   for (i in seq_len(length(qs_files))){
-    print(rds_files[i])
+    print(qs_files[i])
     flow_dat <- qs::qread(qs_files[i]) 
     
     reduced_dat <- convert_to_long(flow_dat)
