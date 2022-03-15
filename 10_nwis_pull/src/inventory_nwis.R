@@ -1,6 +1,6 @@
 inventory_nwis <- function(inv_ind, nwis_pull_params, service) {
   
-  hucs <- stringr::str_pad(1:21, width = 2, pad = "0")
+  hucs <- stringr::str_pad(1:22, width = 2, pad = "0")
   nwis_pull_params$service <- service
   nwis_pull_params$statCd <- '00003'
   
