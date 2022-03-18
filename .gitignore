@@ -18,3 +18,7 @@
 
 # task plans
 **_tasks.yml
+shellLog/
+.mytmp/
+.myvar/
+national-data-pulls_v0.0.sif
