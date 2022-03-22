@@ -12,7 +12,7 @@
 
 module load singularity
 
-srun singularity exec national-data-pulls_v0.0.sif Rscript -e '
+srun singularity exec national-data-pulls_v0.1.sif Rscript -e '
 library(scipiper);
 options(scipiper.getters_file = "10_nwis_pull.yml"); 
 scmake("20_data_munge/out/daily_flow.rds.ind")'
