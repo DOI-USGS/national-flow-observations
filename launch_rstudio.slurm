@@ -46,7 +46,7 @@ module load singularity
 # This example bind mounts the /cxfs directory on the host into the Singularity container.
 # By default the only host file systems mounted within the container are $HOME, /tmp, /proc, /sys, and /dev.
 srun singularity exec --bind .mytmp:/tmp --bind .myrun:/run --bind .myvar:/var \
-    national-data-pulls_v0.0.sif \
+    national-data-pulls_v0.1.sif \
     rserver --www-port ${PORT} --auth-none=0 --auth-pam-helper-path=pam-helper \
     --server-working-dir=${START_DIR}
 printf 'rserver exited' 1>&2
