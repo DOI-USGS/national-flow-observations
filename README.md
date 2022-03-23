@@ -16,4 +16,14 @@ After you run the commands above you will see a prompt for a password. The passw
 
 Two Slurm scripts are included in this repo.  If you want to run Rstudio to do development work, run `sbatch launch_rstudio.slurm` and then follow the instructions in the Slurm output file (`shellLog/rstudio.out`) to make an SSH tunnel and log in to Rstudio via a browser.
 
-To run the pipeline as a non-interactive batch job, open `run_scmake.slurm` and modify parameters like job length (`--time`) and partition (`-p`) as needed for how long you expect the job to run (see [this issue](https://github.com/USGS-R/national-flow-observations/issues/4) for estimates). Submit the job with `sbatch --mail-user=$USER@usgs.gov run_scmake.slurm`.
+To run the pipeline as a non-interactive batch job, open `run_scmake.slurm` and modify parameters like job length (`--time`) and partition (`-p`) as neewided for how long you expect the job to run (see [this issue](https://github.com/USGS-R/national-flow-observations/issues/4) for estimates). Submit the job with `sbatch --mail-user=$USER@usgs.gov run_scmake.slurm`.
+
+To be able to run the full pipeline, you will need to have AWS credentials setup on your user's home directory on Tallgrass. You need to have the file `/home/username/.aws/credentials`, which looks like this:
+
+```
+[default]
+aws_access_key_id = ***
+aws_secret_access_key = ***
+```
+
+The `aws_access_key_id` and `aws_secret_access_key` values are from the `dev-owi-s3-access` secret stored in `dssecrets`. Talk with your data science colleagues to get access to that secret if you don't already have it. 
