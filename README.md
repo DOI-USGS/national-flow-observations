@@ -3,8 +3,8 @@ This repository pulls national flow data from NWIS for 50 states and all territo
 
 As of 2022, the repo is set-up for use on Tallgrass because Yeti will be removed from service in August 2022. The 2022 version of this repo is currently cloned here: `/caldera/projects/usgs/water/iidd/datasci/data-pulls/national-flow-observations`
 
-## To run on Tallgrass with Singularity:
-These are exact commands for Tallgrass.
+## To setup on Tallgrass with Singularity:
+These are exact commands for Tallgrass. This is needed only when the image needs to be updated or when we move the repo somewhere other than Tallgrass.
 
 After cloning the repo, pull the docker image from code.chs.usgs.gov:
 
@@ -13,6 +13,8 @@ module load singularity
 singularity pull --docker-login docker://code.chs.usgs.gov:5001/wma/wp/national-data-pulls:v0.1
 ```
 After you run the commands above you will see a prompt for a password. The password it is looking for is your [personal access token (PAT)](https://code.chs.usgs.gov/-/profile/personal_access_tokens). If you do not have a PAT set up you will need to do so.
+
+## To run on Tallgrass with Singularity:
 
 Two Slurm scripts are included in this repo.  If you want to run Rstudio to do development work, run `sbatch launch_rstudio.slurm` and then follow the instructions in the Slurm output file (`shellLog/rstudio.out`) to make an SSH tunnel and log in to Rstudio via a browser.
 
