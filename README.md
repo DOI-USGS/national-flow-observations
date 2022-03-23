@@ -10,7 +10,7 @@ After cloning the repo, pull the docker image from code.chs.usgs.gov:
 
 ```
 module load singularity
-singularity pull --docker-login docker://code.chs.usgs.gov:5001/wma/wp/national-data-pulls:v0.0
+singularity pull --docker-login docker://code.chs.usgs.gov:5001/wma/wp/national-data-pulls:v0.1
 ```
 After you run the commands above you will see a prompt for a password. The password it is looking for is your [personal access token (PAT)](https://code.chs.usgs.gov/-/profile/personal_access_tokens). If you do not have a PAT set up you will need to do so.
 
