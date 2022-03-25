@@ -1,5 +1,5 @@
 # national-flow-observations
-This repository pulls national flow data from NWIS for 50 states and all territories. The pipeline pushes to a shared cache in an S3 bucket called [ds-pipeline-national-flow-observations](https://s3.console.aws.amazon.com/s3/buckets/ds-pipeline-national-flow-observations/?region=us-west-2&tab=overview).
+This repository pulls national flow data from NWIS for 50 states and all territories. The pipeline pushes to a shared cache in a USGS-internal S3 bucket called [ds-pipeline-national-flow-observations](https://s3.console.aws.amazon.com/s3/buckets/ds-pipeline-national-flow-observations/?region=us-west-2&tab=overview) (note you need to be logged into the console before this link will work).
 
 As of 2022, the repo is set-up for use on Tallgrass because Yeti will be removed from service in August 2022. The 2022 version of this repo is currently cloned here: `/caldera/projects/usgs/water/iidd/datasci/data-pulls/national-flow-observations`
 
