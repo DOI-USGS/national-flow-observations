@@ -20,12 +20,29 @@ Two Slurm scripts are included in this repo.  If you want to run Rstudio to do d
 
 To run the pipeline as a non-interactive batch job, open `run_scmake.slurm` and modify parameters like job length (`--time`) and partition (`-p`) as needed for how long you expect the job to run (see [this issue](https://github.com/USGS-R/national-flow-observations/issues/4) for estimates). Submit the job with `sbatch --mail-user=$USER@usgs.gov run_scmake.slurm`.
 
-To be able to run the full pipeline, you will need to have AWS credentials setup on your user's home directory on Tallgrass. You need to have the file `/home/username/.aws/credentials`, which looks like this:
+To be able to run the full pipeline, you will need to have AWS credentials setup on your user's home directory on Tallgrass. This will only be possible for USGS users. You need to have the file `/home/username/.saml2aws`, which looks like this:
 
 ```
 [default]
-aws_access_key_id = ***
-aws_secret_access_key = ***
+   url                  = http://awsconsole.usgs.gov/
+   username             = USER@usgs.gov
+   provider             = ADFS
+   mfa                  = Auto
+   skip_verify          = false
+   timeout              = 0
+   aws_urn              = urn:amazon:webservices
+   aws_session_duration = 28800
+   aws_profile          =
+   resource_id          =
+   subdomain            =
+   role_arn             =
+   region               =
+   http_attempts_count  = 3
+   http_retry_delay     = 1
 ```
 
-The `aws_access_key_id` and `aws_secret_access_key` values are from the `dev-owi-s3-access` secret stored in `dssecrets`. Talk with your data science colleagues to get access to that secret if you don't already have it. 
+Be sure to update the `username` field to match your own email. You will need to log in either before running `scmake()` in an interactive session or before you submit your non-interactive batch job. Note that credentials will work for a maximum of 8 hours, which means that you may get a failure and need to re-authenticate for jobs that take longer. Run the following to use the appropriate credentials to authenticate to AWS for this pipeline: 
+
+```
+saml2aws login -p default --role=arn:aws:iam::807615458658:role/adfs-wma-developer --region us-west-2 --session-duration 28800
+```
