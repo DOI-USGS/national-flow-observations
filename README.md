@@ -41,7 +41,9 @@ To be able to run the full pipeline, you will need to have AWS credentials setup
    http_retry_delay     = 1
 ```
 
-Be sure to update the `username` field to match your own email. You will need to log in either before running `scmake()` in an interactive session or before you submit your non-interactive batch job. Note that credentials will work for a maximum of 8 hours, which means that you may get a failure and need to re-authenticate for jobs that take longer. Run the following to use the appropriate credentials to authenticate to AWS for this pipeline: 
+Be sure to update the `username` field to match your own email. Before being able to successfully use this file, you will need to install `saml2aws` (yes, even on HPC). You can follow instructions for doing so in our [USGS guide to using `saml2aws`](https://dsp-manual.wma.chs.usgs.gov/docs/aws/introduction_to_aws/). 
+
+To use the `saml2aws` setup, you will need to log in either before running `scmake()` in an interactive session or before you submit your non-interactive batch job. Note that credentials will work for a maximum of 8 hours, which means that you may get a failure and need to re-authenticate for jobs that take longer. Run the following to use the appropriate credentials to authenticate to AWS for this pipeline: 
 
 ```
 saml2aws login --role=arn:aws:iam::807615458658:role/adfs-wma-developer --region us-west-2
