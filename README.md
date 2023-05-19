@@ -32,7 +32,7 @@ To be able to run the full pipeline, you will need to have AWS credentials setup
    timeout              = 0
    aws_urn              = urn:amazon:webservices
    aws_session_duration = 28800
-   aws_profile          =
+   aws_profile          = default
    resource_id          =
    subdomain            =
    role_arn             =
@@ -44,5 +44,5 @@ To be able to run the full pipeline, you will need to have AWS credentials setup
 Be sure to update the `username` field to match your own email. You will need to log in either before running `scmake()` in an interactive session or before you submit your non-interactive batch job. Note that credentials will work for a maximum of 8 hours, which means that you may get a failure and need to re-authenticate for jobs that take longer. Run the following to use the appropriate credentials to authenticate to AWS for this pipeline: 
 
 ```
-saml2aws login -p default --role=arn:aws:iam::807615458658:role/adfs-wma-developer --region us-west-2 --session-duration 28800
+saml2aws login --role=arn:aws:iam::807615458658:role/adfs-wma-developer --region us-west-2 --session-duration 28800
 ```
