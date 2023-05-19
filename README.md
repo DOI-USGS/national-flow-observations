@@ -24,7 +24,7 @@ To be able to run the full pipeline, you will need to have AWS credentials setup
 
 ```
 [default]
-   url                  = http://awsconsole.usgs.gov/
+   url                  = https://fs.doi.gov
    username             = USER@usgs.gov
    provider             = ADFS
    mfa                  = Auto
